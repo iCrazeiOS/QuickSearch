@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>QuickSearch</string>
+			<key>footerText</key>
+			<string>Make sure you have assigned an activator trigger for the "Trigger QuickSearch" action.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.icraze.quicksearchprefs</string>
+			<key>key</key>
+			<string>kDarkModeEnabled</string>
+			<key>label</key>
+			<string>Dark Mode</string>
+			<key>PostNotification</key>
+			<string>com.icraze.quicksearch.prefschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>default</key>
+			<string>Google</string>
+			<key>defaults</key>
+			<string>com.icraze.quicksearchprefs</string>
+			<key>key</key>
+			<string>kSearchEngine</string>
+			<key>label</key>
+			<string>Search Engine</string>
+			<key>PostNotification</key>
+			<string>com.icraze.quicksearch.prefschanged</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>validValues</key>
+			<array>
+				<string>Bing</string>
+				<string>DuckDuckGo</string>
+				<string>Ecosia</string>
+				<string>Google</string>
+			</array>
+			<key>validTitles</key>
+			<array>
+				<string>Bing</string>
+				<string>DuckDuckGo</string>
+				<string>Ecosia</string>
+				<string>Google</string>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Links</string>
+			<key>footerText</key>
+			<string>© 2020 iCraze</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Buy me a coffee ☕️ (PayPal)</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Open Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>email</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Copy Email</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Source Code</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>QuickSearch</string>
+</dict>
+</plist>
