@@ -28,6 +28,20 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.icraze.quicksearchprefs</string>
+			<key>key</key>
+			<string>kDismissWithHomeButton</string>
+			<key>label</key>
+			<string>Dismiss With Home Button</string>
+			<key>PostNotification</key>
+			<string>com.icraze.quicksearch.prefschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
 			<string>Google</string>

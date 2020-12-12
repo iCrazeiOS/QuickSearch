@@ -44,7 +44,7 @@
 
 %hook SpringBoard
 -(_Bool)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
-	if ((arg1.allPresses.allObjects[0].type == 101 || arg1.allPresses.allObjects[0].type == 104) && arg1.allPresses.allObjects[0].force == 0) {
+	if (((arg1.allPresses.allObjects[0].type == 101 && kDismissWithHomeButton) || arg1.allPresses.allObjects[0].type == 104) && arg1.allPresses.allObjects[0].force == 0) {
 		[mainWindow setUserInteractionEnabled:NO];
 		[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
 			[searchBar setAlpha:0];

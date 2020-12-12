@@ -17,6 +17,7 @@
 static UIView *searchBar;
 static UITextField *searchTextBox;
 static BOOL kDarkModeEnabled;
+static BOOL kDismissWithHomeButton;
 static NSString *kSearchEngine;
 QuickSearchWindow *mainWindow;
 
@@ -36,5 +37,6 @@ QuickSearchWindow *mainWindow;
 static void loadPrefs() {
 	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.icraze.quicksearchprefs.plist"];
 	kDarkModeEnabled = [prefs objectForKey:@"kDarkModeEnabled"] ? [[prefs objectForKey:@"kDarkModeEnabled"] boolValue] : YES;
+	kDismissWithHomeButton = [prefs objectForKey:@"kDismissWithHomeButton"] ? [[prefs objectForKey:@"kDismissWithHomeButton"] boolValue] : NO;
 	kSearchEngine = [prefs objectForKey:@"kSearchEngine"] ? [prefs objectForKey:@"kSearchEngine"] : @"Google";
 }
