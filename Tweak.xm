@@ -3,6 +3,16 @@
 #import <Tweak.h>
 
 @implementation QuickSearchWindow
+/* Allow touches go beyond the window even on Springboard */
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *viewAtPoint = [self.rootViewController.view hitTest:point withEvent:event];
+    if (!viewAtPoint || (viewAtPoint == self.rootViewController.view)) {
+		return NO;
+	} else {
+		return YES;
+	} 
+}
+
 -(void)searchText:(NSString *)text {
 	// if no text is inputted, just fade/dismiss the view
 	if ([text isEqualToString:@""]) {
@@ -58,6 +68,8 @@
 	%orig;
 	// add notification observer
 	mainWindow = [[QuickSearchWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	/* allocated view controller inside the window - we do not add views to windows directly */
+	mainWindow.rootViewController = [[UIViewController alloc] init];
 	[mainWindow setWindowLevel:UIWindowLevelAlert];
 	[mainWindow setHidden:YES];
 	[mainWindow setUserInteractionEnabled:NO];
@@ -131,7 +143,7 @@
 	[searchBar setAlpha:0];
 	[searchBar addSubview:searchButton];
 	[searchBar addSubview:searchTextBox];
-	[mainWindow addSubview:searchBar];
+	[mainWindow.rootViewController.view addSubview:searchBar];
 
 	[UIView animateWithDuration:0.2f animations:^{searchBar.alpha = 1;} completion:^(BOOL finished){searchBar.alpha = 1;}];
 }
