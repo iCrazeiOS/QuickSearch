@@ -1,16 +1,10 @@
-// beware: code is probably bad - i hate creating frames
-
 #import <Tweak.h>
 
 @implementation QuickSearchWindow
-/* Allow touches go beyond the window even on Springboard */
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+// Allow touches go beyond the window even on Springboard
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *viewAtPoint = [self.rootViewController.view hitTest:point withEvent:event];
-    if (!viewAtPoint || (viewAtPoint == self.rootViewController.view)) {
-		return NO;
-	} else {
-		return YES;
-	} 
+	return !viewAtPoint || (viewAtPoint == self.rootViewController.view) ? NO : YES;
 }
 
 -(void)searchText:(NSString *)text {
@@ -68,8 +62,9 @@
 	%orig;
 	// add notification observer
 	mainWindow = [[QuickSearchWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	/* allocated view controller inside the window - we do not add views to windows directly */
+	// allocated view controller inside the window - we do not add views to windows directly
 	mainWindow.rootViewController = [[UIViewController alloc] init];
+	
 	[mainWindow setWindowLevel:UIWindowLevelAlert];
 	[mainWindow setHidden:YES];
 	[mainWindow setUserInteractionEnabled:NO];
