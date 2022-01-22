@@ -1,0 +1,9 @@
+Package: com.icraze.quicksearch
+Name: QuickSearch
+Version: 1.2
+Architecture: iphoneos-arm
+Description: Quickly search for something on the internet.
+Maintainer: iCraze
+Author: iCraze
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), libactivator

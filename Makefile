@@ -1,4 +1,5 @@
-export TARGET = iphone:clang:latest:12.2
+export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
+export SDKVERSION = 14.4
 export ARCHS = arm64 arm64e
 
 INSTALL_TARGET_PROCESSES = SpringBoard

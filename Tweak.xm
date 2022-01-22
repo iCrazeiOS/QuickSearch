@@ -3,7 +3,7 @@
 @implementation QuickSearchWindow
 // Allow touches go beyond the window even on Springboard
 -(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *viewAtPoint = [self.rootViewController.view hitTest:point withEvent:event];
+	UIView *viewAtPoint = [self.rootViewController.view hitTest:point withEvent:event];
 	return !viewAtPoint || (viewAtPoint == self.rootViewController.view) ? NO : YES;
 }
 
@@ -38,11 +38,6 @@
 	else if ([text hasPrefix:@"http"]) [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", text]] options:@{} completionHandler:nil];
 	// if not a url, search google for the inputted query
 	else [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", searchEngineString, [text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]]] options:@{} completionHandler:nil];
-
-	// for v1.1:
-	// bing https://www.bing.com/search?q=<search query>
-	// duckduckgo: https://duckduckgo.com/?q=<search query>
-	// ecosia: https://www.ecosia.org/search?q=<search query>
 }
 @end
 
@@ -50,9 +45,7 @@
 %hook SBHomeHardwareButton
 - (void)singlePressUp:(id)arg1 {
 	%orig;
-	/*--- if QuickSearch ain't visible on the screen we return,
-	because we don't want to call this code everytime the user
-	presses the home button ---*/
+	// make sure that the QuickSearch window is visible
 	if(searchBar.window == nil || !kDismissWithHomeButton) return;
 
 	[mainWindow setUserInteractionEnabled:NO];
@@ -82,8 +75,6 @@
 -(void)setupSearchBar {
 	// only run code if the device is portrait
 	// too busy to mess with landscape support atm
-	// got loads of irl stuff to deal with
-	// if another dev wants to do it, you can submit a PR :)
 	if ([[[UIScreen mainScreen] valueForKey:@"_interfaceOrientation"] intValue] != 1) return;
 	// remove any old instances
 	if (searchBar) {
@@ -97,7 +88,8 @@
 	searchBar.center = CGPointMake([[[UIApplication sharedApplication] keyWindow] rootViewController].view.center.x, 70);
 	kDarkModeEnabled ? searchBar.backgroundColor = [UIColor colorWithRed: 0.11 green: 0.11 blue: 0.12 alpha: 1.00] : searchBar.backgroundColor = [UIColor whiteColor];
 	searchBar.layer.cornerRadius = 25;
-	searchBar.layer.cornerCurve = kCACornerCurveContinuous;
+	if (@available(iOS 13.0, *)) searchBar.layer.cornerCurve = kCACornerCurveContinuous;
+	else searchBar.layer.continuousCorners = YES;
 	searchBar.layer.masksToBounds = YES;
 
 	// setup bar swipe recogniser
@@ -192,13 +184,13 @@
 	%orig;
 
 	// tap gesture recognizer
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapToDismiss)];
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quicksearch_didTapToDismiss)];
 	[self.view addGestureRecognizer:tapGesture];
 
 }
 
 %new
-- (void)didTapToDismiss {
+-(void)quicksearch_didTapToDismiss {
 	[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
 		[mainWindow setHidden:YES];
 		[mainWindow setUserInteractionEnabled:NO];
