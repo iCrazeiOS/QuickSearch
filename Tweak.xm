@@ -1,4 +1,4 @@
-#import <Tweak.h>
+#import "Tweak.h"
 
 @implementation QuickSearchWindow
 // Allow touches go beyond the window even on Springboard
@@ -46,18 +46,23 @@
 }
 @end
 
-%hook SpringBoard
--(_Bool)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
-	if (((arg1.allPresses.allObjects[0].type == 101 && kDismissWithHomeButton) || arg1.allPresses.allObjects[0].type == 104) && arg1.allPresses.allObjects[0].force == 0) {
-		[mainWindow setUserInteractionEnabled:NO];
-		[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
-			[searchBar setAlpha:0];
-			[mainWindow setHidden:YES];
-		}];
-	}
-	return %orig;
-}
 
+%hook SBHomeHardwareButton
+- (void)singlePressUp:(id)arg1 {
+	%orig;
+	/*--- if QuickSearch ain't visible on the screen we return,
+	because we don't want to call this code everytime the user
+	presses the home button ---*/
+	if(searchBar.window == nil || !kDismissWithHomeButton) return;
+
+	[mainWindow setUserInteractionEnabled:NO];
+	[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
+		[mainWindow setHidden:YES];
+	}];
+}
+%end
+
+%hook SpringBoard
 -(void)applicationDidFinishLaunching:(id)arg1 {
 	%orig;
 	// add notification observer
@@ -69,6 +74,7 @@
 	[mainWindow setHidden:YES];
 	[mainWindow setUserInteractionEnabled:NO];
 	[mainWindow makeKeyAndVisible];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupSearchBar) name:@"QuickSearchNotification" object:nil];
 }
 
@@ -91,7 +97,7 @@
 	searchBar.center = CGPointMake([[[UIApplication sharedApplication] keyWindow] rootViewController].view.center.x, 70);
 	kDarkModeEnabled ? searchBar.backgroundColor = [UIColor colorWithRed: 0.11 green: 0.11 blue: 0.12 alpha: 1.00] : searchBar.backgroundColor = [UIColor whiteColor];
 	searchBar.layer.cornerRadius = 25;
-	searchBar.layer.continuousCorners = YES;
+	searchBar.layer.cornerCurve = kCACornerCurveContinuous;
 	searchBar.layer.masksToBounds = YES;
 
 	// setup bar swipe recogniser
@@ -140,7 +146,7 @@
 	[searchBar addSubview:searchTextBox];
 	[mainWindow.rootViewController.view addSubview:searchBar];
 
-	[UIView animateWithDuration:0.2f animations:^{searchBar.alpha = 1;} completion:^(BOOL finished){searchBar.alpha = 1;}];
+	[UIView animateWithDuration:0.2f animations:^{searchBar.alpha = 1;} completion:nil];
 }
 
 // when the google button is pressed
@@ -176,6 +182,26 @@
 		[searchBar removeFromSuperview];
 		searchTextBox = nil;
 		searchBar = nil;
+	}];
+}
+
+%end
+
+%hook SBHomeScreenViewController
+- (void)viewDidLoad {
+	%orig;
+
+	// tap gesture recognizer
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapToDismiss)];
+	[self.view addGestureRecognizer:tapGesture];
+
+}
+
+%new
+- (void)didTapToDismiss {
+	[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
+		[mainWindow setHidden:YES];
+		[mainWindow setUserInteractionEnabled:NO];
 	}];
 }
 %end
