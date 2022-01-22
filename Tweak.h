@@ -3,15 +3,14 @@
 @interface SpringBoard : UIApplication <UITextFieldDelegate>
 @end
 
-@interface CALayer (QuickSearch)
-@property (atomic, assign, readwrite) BOOL continuousCorners;
-@end
-
 @interface UITextField (QuickSearch)
 @property (atomic, assign, readwrite) UILabel *_placeholderLabel;
 @end
 
 @interface QuickSearchWindow : UIWindow
+@end
+
+@interface SBHomeScreenViewController : UIViewController
 @end
 
 static UIView *searchBar;
