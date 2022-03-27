@@ -67,7 +67,7 @@
 	[mainWindow setHidden:YES];
 	[mainWindow setUserInteractionEnabled:NO];
 	[mainWindow makeKeyAndVisible];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"QuickSearchNotification" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupSearchBar) name:@"QuickSearchNotification" object:nil];
 }
 
