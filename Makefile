@@ -1,4 +1,3 @@
-#export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
 export SDKVERSION = 13.7
 export ARCHS = arm64 arm64e
 
@@ -8,9 +7,8 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = QuickSearch
 
-QuickSearch_FILES = Tweak.xm
+QuickSearch_FILES = Tweak.xm QuickSearchWindow.m
 QuickSearch_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
-QuickSearch_LDFLAGS = -lactivator
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += quicksearchprefs

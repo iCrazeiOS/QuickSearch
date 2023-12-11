@@ -6,4 +6,4 @@ Description: Click both volume buttons to quickly search for something on the in
 Maintainer: iCraze
 Author: iCraze
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000), libactivator
+Depends: mobilesubstrate (>= 0.9.5000)

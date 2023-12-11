@@ -9,8 +9,6 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>QuickSearch</string>
-			<key>footerText</key>
-			<string>Make sure you have assigned an activator trigger for the "Trigger QuickSearch" action.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -76,7 +74,7 @@
 			<key>label</key>
 			<string>Links</string>
 			<key>footerText</key>
-			<string>© 2020 iCraze</string>
+			<string>© 2020-2024 iCraze</string>
 		</dict>
 		<dict>
 			<key>action</key>
