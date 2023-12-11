@@ -17,6 +17,11 @@
 @interface SBHomeScreenViewController : UIViewController
 @end
 
+#define GOOGLE_URL @"https://www.google.com/search?q="
+#define DUCKDUCKGO_URL @"https://duckduckgo.com/?q="
+#define ECOSIA_URL @"https://www.ecosia.org/search?q="
+#define BING_URL @"https://www.bing.com/search?q="
+
 static UIView *searchBar;
 static UITextField *searchTextBox;
 static BOOL kDarkModeEnabled;

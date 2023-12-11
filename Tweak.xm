@@ -1,7 +1,7 @@
 #import "Tweak.h"
 
 @implementation QuickSearchWindow
-// Allow touches go beyond the window even on Springboard
+// Allow touches go beyond the window, even on Springboard
 -(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
 	UIView *viewAtPoint = [self.rootViewController.view hitTest:point withEvent:event];
 	return !viewAtPoint || (viewAtPoint == self.rootViewController.view) ? NO : YES;
@@ -26,27 +26,31 @@
 	searchBar = nil;
 
 	// set search engine
-	NSString *searchEngineString;
-	if ([kSearchEngine isEqualToString:@"Google"]) searchEngineString = @"https://www.google.com/search?q=";
-	else if ([kSearchEngine isEqualToString:@"DuckDuckGo"]) searchEngineString = @"https://duckduckgo.com/?q=";
-	else if ([kSearchEngine isEqualToString:@"Ecosia"]) searchEngineString = @"https://www.ecosia.org/search?q=";
-	else if ([kSearchEngine isEqualToString:@"Bing"]) searchEngineString = @"https://www.bing.com/search?q=";
+	NSString *searchEngineString = GOOGLE_URL;
+	if ([kSearchEngine isEqualToString:@"DuckDuckGo"]) searchEngineString = DUCKDUCKGO_URL;
+	else if ([kSearchEngine isEqualToString:@"Ecosia"]) searchEngineString = ECOSIA_URL;
+	else if ([kSearchEngine isEqualToString:@"Bing"]) searchEngineString = BING_URL;
 
 	// open search query
-	// if the text is a url, go to the url
-	if ([text hasPrefix:@"www"]) [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", text]] options:@{} completionHandler:nil];
-	else if ([text hasPrefix:@"http"]) [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", text]] options:@{} completionHandler:nil];
-	// if not a url, search google for the inputted query
-	else [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", searchEngineString, [text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]]] options:@{} completionHandler:nil];
+	NSString *urlString = @"";
+	if ([text hasPrefix:@"www"]) { // if the text is likely to be a url, go to the url
+		urlString = [NSString stringWithFormat:@"https://%@", text];
+	} else if ([text hasPrefix:@"http"]) { // if the text is a url, go to the url
+		urlString = [NSString stringWithFormat:@"%@", text];
+	} else { // if not a url, search google for the inputted query (needs to be url encoded)
+		urlString = [NSString stringWithFormat:@"%@%@", searchEngineString, [text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+	}
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString] options:@{} completionHandler:nil];
 }
 @end
 
 
+// dismiss on home button press
 %hook SBHomeHardwareButton
-- (void)singlePressUp:(id)arg1 {
+-(void)singlePressUp:(id)arg1 {
 	%orig;
 	// make sure that the QuickSearch window is visible
-	if(searchBar.window == nil || !kDismissWithHomeButton) return;
+	if (searchBar.window == nil || !kDismissWithHomeButton) return;
 
 	[mainWindow setUserInteractionEnabled:NO];
 	[UIView animateWithDuration:0.2f animations:^{[searchBar setAlpha:0];} completion:^(BOOL finished){
@@ -55,6 +59,8 @@
 }
 %end
 
+
+// setup the window when springboard is launched
 %hook SpringBoard
 -(void)applicationDidFinishLaunching:(id)arg1 {
 	%orig;
@@ -74,8 +80,9 @@
 %new
 -(void)setupSearchBar {
 	// only run code if the device is portrait
-	// too busy to mess with landscape support atm
+	// landscape support is not implemented
 	if ([[[UIScreen mainScreen] valueForKey:@"_interfaceOrientation"] intValue] != 1) return;
+
 	// remove any old instances
 	if (searchBar) {
 		[searchBar removeFromSuperview];
@@ -84,8 +91,8 @@
 	}
 
 	// setup bar
-	searchBar = [[UIView alloc] initWithFrame:CGRectMake(0, 50, [[[UIApplication sharedApplication] keyWindow] rootViewController].view.frame.size.width*0.95, 55)];
-	searchBar.center = CGPointMake([[[UIApplication sharedApplication] keyWindow] rootViewController].view.center.x, 70);
+	searchBar = [[UIView alloc] initWithFrame:CGRectMake(0, 50, mainWindow.rootViewController.view.frame.size.width*0.95, 55)];
+	searchBar.center = CGPointMake(mainWindow.rootViewController.view.center.x, 70);
 	kDarkModeEnabled ? searchBar.backgroundColor = [UIColor colorWithRed: 0.11 green: 0.11 blue: 0.12 alpha: 1.00] : searchBar.backgroundColor = [UIColor whiteColor];
 	searchBar.layer.cornerRadius = 25;
 	if (@available(iOS 13.0, *)) searchBar.layer.cornerCurve = kCACornerCurveContinuous;
@@ -105,8 +112,8 @@
 	searchButton.center = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? CGPointMake(searchBar.frame.size.width*0.95, 27.5) : CGPointMake(searchBar.frame.size.width*0.9, 27.5);
 
 	// setup text box
-	searchTextBox = [[UITextField alloc] initWithFrame:CGRectMake(0, 50, [[[UIApplication sharedApplication] keyWindow] rootViewController].view.frame.size.width*0.8, 45)];
-	searchTextBox.center = CGPointMake([[[UIApplication sharedApplication] keyWindow] rootViewController].view.center.x*0.8, 27.5);
+	searchTextBox = [[UITextField alloc] initWithFrame:CGRectMake(0, 50, mainWindow.rootViewController.view.frame.size.width*0.8, 45)];
+	searchTextBox.center = CGPointMake(mainWindow.rootViewController.view.center.x*0.8, 27.5);
 	searchTextBox.placeholder = @"Search";
 	kDarkModeEnabled ? searchTextBox.textColor = [UIColor whiteColor] : searchTextBox.textColor = [UIColor blackColor];
 	kDarkModeEnabled ? searchTextBox._placeholderLabel.textColor = [UIColor whiteColor] : searchTextBox._placeholderLabel.textColor = [UIColor blackColor];
@@ -179,14 +186,14 @@
 
 %end
 
+
 %hook SBHomeScreenViewController
-- (void)viewDidLoad {
+-(void)viewDidLoad {
 	%orig;
 
 	// tap gesture recognizer
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quicksearch_didTapToDismiss)];
 	[self.view addGestureRecognizer:tapGesture];
-
 }
 
 %new
