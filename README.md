@@ -1,2 +1,2 @@
 # QuickSearch
-Jailbreak tweak: Quickly search for something on the internet
+Jailbreak tweak: Click both volume buttons to quickly search for something on the internet
