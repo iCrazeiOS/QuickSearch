@@ -24,7 +24,7 @@
 			<key>label</key>
 			<string>Dark Mode</string>
 			<key>PostNotification</key>
-			<string>com.icraze.quicksearch.prefschanged</string>
+			<string>com.icraze.quicksearch-prefschanged</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -38,7 +38,7 @@
 			<key>label</key>
 			<string>Dismiss With Home Button</string>
 			<key>PostNotification</key>
-			<string>com.icraze.quicksearch.prefschanged</string>
+			<string>com.icraze.quicksearch-prefschanged</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -52,7 +52,7 @@
 			<key>label</key>
 			<string>Search Engine</string>
 			<key>PostNotification</key>
-			<string>com.icraze.quicksearch.prefschanged</string>
+			<string>com.icraze.quicksearch-prefschanged</string>
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>validValues</key>
