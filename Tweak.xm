@@ -2,17 +2,8 @@
 
 static QuickSearchWindow *mainWindow = nil;
 
-// dismiss on home button press
-%hook SBHomeHardwareButton
--(void)singlePressUp:(id)arg1 {
-	%orig;
-	[mainWindow dismiss];
-}
-%end
-
-
-// setup the window when springboard is launched
 %hook SpringBoard
+// setup the window when springboard is launched
 -(void)applicationDidFinishLaunching:(id)arg1 {
 	%orig;
 
@@ -20,6 +11,7 @@ static QuickSearchWindow *mainWindow = nil;
 	mainWindow = [[QuickSearchWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 }
 
+// toggle the window when both volume buttons are pressed
 -(_Bool)_handlePhysicalButtonEvent:(UIPressesEvent *)event {
 	if (!mainWindow) return %orig;
 

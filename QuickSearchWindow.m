@@ -1,13 +1,11 @@
 #import "QuickSearchWindow.h"
 
 static BOOL kDarkModeEnabled;
-static BOOL kDismissWithHomeButton;
 static NSString *kSearchEngine;
 
 static void loadPrefs() {
 	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:ROOT_PATH_NS(@"/var/mobile/Library/Preferences/com.icraze.quicksearchprefs.plist")];
 	kDarkModeEnabled = [prefs objectForKey:@"kDarkModeEnabled"] ? [[prefs objectForKey:@"kDarkModeEnabled"] boolValue] : YES;
-	kDismissWithHomeButton = [prefs objectForKey:@"kDismissWithHomeButton"] ? [[prefs objectForKey:@"kDismissWithHomeButton"] boolValue] : NO;
 	kSearchEngine = [prefs objectForKey:@"kSearchEngine"] ? [prefs objectForKey:@"kSearchEngine"] : @"Google";
 }
 
@@ -196,7 +194,7 @@ static void loadPrefs() {
 
 -(void)dismiss {
 	// make sure that the window is visible
-	if (searchBar.window == nil || !kDismissWithHomeButton) return;
+	if (searchBar.window == nil) return;
 
 	[self setUserInteractionEnabled:NO];
 	[UIView animateWithDuration:0.2f animations:^{
